@@ -1,5 +1,28 @@
-const ProductShowcase = ({ product }) => {
-    const { title, description, thumbnail, price, discountPercentage, rating, stock, brand, category, images } = product;
+import Swal from "sweetalert2";
+
+const ProductShowcase = ({ product, cart, setCart }) => {
+    const { id, title, description, thumbnail, price, discountPercentage, rating, stock, brand, category, images } = product;
+
+    const handleAddToCart = () => {
+        const newCart = [...cart];
+        newCart.push({
+            id,
+            title,
+            price,
+            quantity: 1,
+        });
+
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `${title} is added to cart`,
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+        setCart(newCart);
+        localStorage.setItem('cart', JSON.stringify(newCart));
+    };
 
     return (
         <div className="card bg-base-100 shadow-xl p-4">
@@ -26,7 +49,9 @@ const ProductShowcase = ({ product }) => {
                     </div>
                 )}
                 <div className="mt-4">
-                    <button className="btn btn-primary">Buy Now</button>
+                    <button className="btn btn-primary" onClick={handleAddToCart}>
+                        Add to Cart
+                    </button>
                 </div>
             </div>
         </div>
