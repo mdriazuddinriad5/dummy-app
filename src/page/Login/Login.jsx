@@ -1,57 +1,46 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { AuthContext } from '../provider/AuthProvider';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
-        const apiUrl = 'https://dummyjson.com/auth/login';
-
         try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: email,
-                    password: password,
-
-                }),
-            });
-
-            const data = await response.json();
-
-            if (data.token) {
-                localStorage.setItem('authToken', data.token);
-                window.location.href = '/';
-            } else {
-                alert('Authentication failed. Please check your credentials.');
-            }
+            await authContext.signIn(email, password);
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            alert('Authentication failed. Please check your credentials.');
+            console.error('Error during login:', error);
         }
     };
+
+    useEffect(() => {
+        if (authContext.user) {
+            navigate(location?.state ? location.state : '/home')
+        }
+    }, [location.state, navigate, authContext.user]);
 
     return (
         <div>
             <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content flex-col lg:flex-row-reverse">
-                    <div className="text-center lg:text-left">
-                        <h1 className="text-5xl font-bold">Login now!</h1>
-                        <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                    </div>
-                    <div className="card shrink-0 w-full max-w-lg shadow-2xl bg-base-100">
+                    <div className="card shrink-0 w-full max-w-lg shadow-xl bg-base-100">
+                        <h1 className="text-3xl font-bold text-center mt-4">Login now!</h1>
                         <form className="card-body" onSubmit={handleLogin}>
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">Email</span>
+                                    <span className="label-text">UserName</span>
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="email"
+                                    placeholder="username"
                                     className="input input-bordered"
                                     required
                                     value={email}
@@ -63,7 +52,7 @@ const Login = () => {
                                     <span className="label-text">Password</span>
                                 </label>
                                 <input
-                                    type="text"
+                                    type="password"
                                     placeholder="password"
                                     className="input input-bordered"
                                     required
@@ -83,12 +72,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
-
         </div>
-
-
-
-
     );
 };
 

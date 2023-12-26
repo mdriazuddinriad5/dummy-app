@@ -42,7 +42,7 @@ const ProductShowcase = ({ product, cart, setCart }) => {
                     <div className="mt-4">
                         <p className="mb-2 text-gray-700">Additional Images:</p>
                         <div className="flex space-x-2">
-                            {images.map((image, index) => (
+                            {images.slice(0,2).map((image, index) => (
                                 <img key={index} src={image} alt={`Image ${index + 1}`} className="w-16 h-16 rounded-md" />
                             ))}
                         </div>

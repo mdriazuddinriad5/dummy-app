@@ -84,7 +84,7 @@ const Home = () => {
                     <div className="badge badge-secondary">+{cart.length}</div>
                 </button>
             </div>
-            <div className="grid grid-cols-3 gap-8 mx-auto">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 mx-auto">
                 {filteredProducts.map(product => (
                     <ProductShowcase key={product.id} product={product} cart={cart} setCart={setCart} />
                 ))}
